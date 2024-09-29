@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebBanHangOnline.Models.EF.ProductCategory>
+﻿<!--@model IEnumerable<WebBanHangOnline.Models.EF.ProductCategory>
 
 @if (Model != null && Model.Any())
 {
@@ -17,12 +17,12 @@
                     @foreach (var item in Model)
                     {
                         <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center" data-filter=".@item.Alias">@item.Title</li>
-                    }
+                    }-->
 
                     @*<li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center" data-filter=".women">women's</li>
                     <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center" data-filter=".accessories">accessories</li>
                     <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center" data-filter=".men">men's</li>*@
-                </ul>
+                <!--</ul>
             </div>
         </div>
     </div>
@@ -32,5 +32,5 @@
                 @Html.Action("Partial_ItemsByCateId", "Products")
             </div>
         </div>
-    </div>
+    </div>-->
 }
