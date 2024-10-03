@@ -1,25 +1,31 @@
-﻿@model IEnumerable<WebBanHangOnline.Models.EF.Category>
+﻿@m@model IEnumerable<WebBanHangOnline.Models.EF.Category>
 
 @if (Model != null && Model.Any())
 {
-<ul class="navbar_menu">
-    @foreach (var item in Model)
-    {
-        if (item.Alias.Equals("trang-chu"))
+    <ul class="navbar_menu">
+        @foreach (var item in Model)
         {
-            item.Alias = "";
-        }
-        if (!string.IsNullOrEmpty(item.Link))
-        {
-            item.Alias = item.Link;
-        }
-        <li><a href="/@item.Alias">@item.Title</a></li>
-    }
+            // Adjust alias for the home page
+            var alias = item.Alias.Equals("trang-chu") ? "" : item.Alias;
 
-    @*<li><a href="#">shop</a></li>
-    <li><a href="#">promotion</a></li>
-    <li><a href="#">pages</a></li>
-    <li><a href="#">blog</a></li>
-    <li><a href="contact.html">contact</a></li>*@
-</ul>
+            // Generate the link or use the alias if no link is provided
+            <li>
+                @if (!string.IsNullOrEmpty(item.Link))
+                {
+                    <a href="@item.Link">@item.Title</a>
+                }
+                else
+                {
+                    <a href="/@alias">@item.Title</a>
+                }
+            </li>
+        }
+
+        @* Example static links (uncomment if needed) *@
+        @*<li><a href="#">shop</a></li>
+            <li><a href="#">promotion</a></li>
+            <li><a href="#">pages</a></li>
+            <li><a href="#">blog</a></li>
+            <li><a href="contact.html">contact</a></li>*@
+    </ul>
 }
