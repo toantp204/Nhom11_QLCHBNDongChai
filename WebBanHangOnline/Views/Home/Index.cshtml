@@ -1,8 +1,8 @@
 ﻿@{
-    ViewBag.Title = ViewBag.Title;
-    ViewBag.SeoDescription = ViewBag.SeoDescription;
+    ViewBag.Title = ViewBag.Title ?? "Default Page Title";
+    ViewBag.SeoDescription = ViewBag.SeoDescription ?? "Default SEO Description";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css">
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/assets/styles/main_styles.css")">
 <!-- Slider -->
 <style>
     .main_slider_content h4,
@@ -10,7 +10,7 @@
         color: white;
     }
 </style>
-<div class="main_slider" style="background-image:url(Content/assets/images/1125.jpg)">
+<div class="main_slider" style="background-image:url('@Url.Content("~/Content/assets/images/1125.jpg")')">
     <div class="container fill_height">
         <div class="row align-items-center fill_height">
             <div class="col">
@@ -28,7 +28,6 @@
 @Html.Action("MenuProductCategory", "Menu")
 
 <!-- New Arrivals -->
-
 <div class="new_arrivals">
     <div class="container">
         @Html.Action("MenuArrivals", "Menu")
@@ -39,18 +38,16 @@
 <div class="deal_ofthe_week_img">
     <div class="col-lg-6">
         <video width="1900px" height="500px" controls>
-            <source src="~/Content/assets/videos/qcao1.mp4" type="video/mp4">
+            <source src="@Url.Content("~/Content/assets/videos/qcao1.mp4")" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
-
 </div>
-
 
 <!-- Best Sellers -->
 @Html.Action("Partial_ProductSales", "Products")
-<!-- Benefit -->
 
+<!-- Benefit -->
 <div class="benefit">
     <div class="container">
         <div class="row benefit_row">
@@ -58,7 +55,7 @@
                 <div class="benefit_item d-flex flex-row align-items-center">
                     <div class="benefit_icon"><i class="fa fa-truck" aria-hidden="true"></i></div>
                     <div class="benefit_content">
-                        <h6>free shipping</h6>
+                        <h6>Free Shipping</h6>
                         <p>Mua trên 3 thùng miễn phí vận chuyển</p>
                     </div>
                 </div>
