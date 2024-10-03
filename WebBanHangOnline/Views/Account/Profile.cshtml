@@ -2,68 +2,95 @@
 @{
     ViewBag.Title = "Profile";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/assets/styles/main_styles.css">
-<!-- Slider -->
+
 <style>
-    .news_section_container {
-        margin-top: 180px;
+    .profile-section {
+        margin-top: 100px;
+        padding: 40px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
     }
 
-    .row-item-new {
-        margin-bottom: 20px;
-    }
+        .profile-section .form-group {
+            margin-bottom: 20px;
+        }
 
-    .title-news {
-        font-size: 24px;
-        border-bottom: 1px solid;
-        padding: 15px 0;
-        margin-bottom: 25px;
-    }
+        .profile-section label {
+            font-weight: bold;
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
 
-    .img-box img {
-        max-width: 100%;
-        max-height: 100%;
-    }
+        .profile-section .form-control {
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s ease;
+        }
+
+            .profile-section .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+            }
+
+        .profile-section .btn {
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .profile-section .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s ease;
+        }
+
+            .profile-section .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #004085;
+            }
 </style>
-<div class="container news_section_container">
-    <div class="row">
 
-        <div class="col-md-12">
+<div class="container profile-section">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
             @using (Html.BeginForm("PostProfile", "Account"))
             {
                 @Html.ValidationSummary(false)
                 @Html.AntiForgeryToken()
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Full Name</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp" name="FullName" value="@Model.FullName">
 
+                <div class="form-group">
+                    <label for="FullName">Full Name</label>
+                    <input type="text" class="form-control" name="FullName" value="@Model.FullName">
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp"  name="UserName" value="@Model.UserName" readonly>
 
+                <div class="form-group">
+                    <label for="UserName">Username</label>
+                    <input type="text" class="form-control" name="UserName" value="@Model.UserName" readonly>
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Phone</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp" name="Phone" value="@Model.Phone">
 
+                <div class="form-group">
+                    <label for="Phone">Phone</label>
+                    <input type="text" class="form-control" name="Phone" value="@Model.Phone">
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email</label>
-                    <input type="text" class="form-control" aria-describedby="emailHelp"  name="Email" value="@Model.Email" readonly>
 
+                <div class="form-group">
+                    <label for="Email">Email</label>
+                    <input type="email" class="form-control" name="Email" value="@Model.Email" readonly>
                 </div>
-                <div class="form-group">
 
-                    <button type="submit" class="btn btn-success">Cập nhật</button>
-
-                </div>}
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+                </div>
+            }
         </div>
+
         <div class="col-md-12">
-         
             @Html.Action("LichSuDonHang", "Review")
         </div>
-
-
     </div>
 </div>
