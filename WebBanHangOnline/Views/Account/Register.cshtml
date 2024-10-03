@@ -81,9 +81,9 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Kích hoạt nút đăng ký khi người dùng tích vào checkbox
-            $('#terms').click(function() {
+            $('#terms').click(function () {
                 if ($('#terms').is(':checked')) {
                     $('#registerButton').removeAttr('disabled');
                 } else {
@@ -92,7 +92,7 @@
             });
 
             // Kiểm tra độ mạnh của mật khẩu
-            $('#Password').keyup(function() {
+            $('#Password').keyup(function () {
                 var password = $(this).val();
                 if (password.length < 6) {
                     $('#passwordStrength').text('Weak password').css('color', 'red');
