@@ -3,28 +3,32 @@
 
 @if (Model != null && Model.Any())
 {
-    <h3>GIỎ HÀNG <span style="float:right;position:relative"><small>@Model.Count()</small></span></h3>
-    var i = 0;
-    var tongtien = decimal.Zero;
+    <h3>
+        GIỎ HÀNG
+        <span style="float:right; position:relative;">
+            <small>@Model.Count()</small>
+        </span>
+    </h3>
+
+    var tongtien = Model.Sum(item => item.TotalPrice); // Simplified total calculation
+
     <div style="border:1px solid #808080;">
         <table class="table">
             @foreach (var item in Model)
             {
-                tongtien += item.TotalPrice;
                 <tr>
                     <td>@item.ProductName</td>
                     <td>@Common.FormatNumber(item.Price, 0)</td>
                 </tr>
             }
             <tr>
-                <td>Tổng tiền</td>
-                <td>@Common.FormatNumber(tongtien, 0)</td>
+                <td><strong>Tổng tiền</strong></td>
+                <td><strong>@Common.FormatNumber(tongtien, 0)</strong></td>
             </tr>
         </table>
     </div>
-
 }
 else
 {
-
+    <p>Giỏ hàng của bạn hiện đang trống!</p> <!-- Added a message for empty cart -->
 }
