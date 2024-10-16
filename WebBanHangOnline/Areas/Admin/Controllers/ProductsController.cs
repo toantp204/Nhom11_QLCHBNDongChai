@@ -16,18 +16,26 @@ namespace WebBanHangOnline.Areas.Admin.Controllers
         // GET: Admin/Products
         public ActionResult Index(int? page)
         {
-            IEnumerable<Product> items = db.Products.OrderByDescending(x => x.Id);
-            var pageSize = 10;
-            if (page == null)
-            {
-                page = 1;
-            }
-            var pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            items = items.ToPagedList(pageIndex, pageSize);
+            // Fetch products and order by descending Id
+            var items = db.Products.OrderByDescending(x => x.Id);
+
+            // Define page size
+            int pageSize = 10;
+
+            // Set default page to 1 if null
+            int pageIndex = page ?? 1;
+
+            // Paginate items
+            var pagedItems = items.ToPagedList(pageIndex, pageSize);
+
+            // Pass data to the view via ViewBag
             ViewBag.PageSize = pageSize;
-            ViewBag.Page = page;
-            return View(items);
+            ViewBag.Page = pageIndex;
+
+            // Return the view with the paged items
+            return View(pagedItems);
         }
+
 
         public ActionResult Add()
         {
