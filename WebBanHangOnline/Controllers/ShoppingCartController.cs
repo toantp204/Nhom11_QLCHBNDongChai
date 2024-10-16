@@ -275,65 +275,73 @@ namespace WebBanHangOnline.Controllers
         [HttpPost]
         public ActionResult AddToCart(int id, int quantity)
         {
-            var code = new { Success = false, msg = "", code = -1, Count = 0 };
+            var response = new { Success = false, msg = "", code = -1, Count = 0 };
 
             if (quantity < 1)
             {
-                code = new { Success = false, msg = "Số lượng sản phẩm phải lớn hơn 0", code = -1, Count = 0 };
-                return Json(code);
+                response = new { Success = false, msg = "Số lượng sản phẩm phải lớn hơn 0", code = -1, Count = 0 };
+                return Json(response);
             }
 
-            var checkProduct = db.Products.FirstOrDefault(x => x.Id == id);
-            if (checkProduct != null)
+            var product = db.Products.FirstOrDefault(x => x.Id == id);
+            if (product == null)
             {
-                ShoppingCart cart = (ShoppingCart)Session["Cart"];
-                if (cart == null)
-                {
-                    cart = new ShoppingCart();
-                }
-                ShoppingCartItem item = new ShoppingCartItem
-                {
-                    ProductId = checkProduct.Id,
-                    ProductName = checkProduct.Title,
-                    CategoryName = checkProduct.ProductCategory.Title,
-                    Alias = checkProduct.Alias,
-                    Quantity = quantity
-                };
-                if (checkProduct.ProductImage.FirstOrDefault(x => x.IsDefault) != null)
-                {
-                    item.ProductImg = checkProduct.ProductImage.FirstOrDefault(x => x.IsDefault).Image;
-                }
-                item.Price = checkProduct.Price;
-                if (checkProduct.PriceSale > 0)
-                {
-                    item.Price = (decimal)checkProduct.PriceSale;
-                }
-                item.TotalPrice = item.Quantity * item.Price;
-                cart.AddToCart(item, quantity);
-                Session["Cart"] = cart;
-                code = new { Success = true, msg = "Thêm sản phẩm vào giỏ hàng thành công!", code = 1, Count = cart.Items.Count };
+                response = new { Success = false, msg = "Sản phẩm không tồn tại.", code = -1, Count = 0 };
+                return Json(response);
             }
-            return Json(code);
+
+            ShoppingCart cart = Session["Cart"] as ShoppingCart ?? new ShoppingCart();
+
+            var productImage = product.ProductImage.FirstOrDefault(x => x.IsDefault)?.Image;
+
+            ShoppingCartItem item = new ShoppingCartItem
+            {
+                ProductId = product.Id,
+                ProductName = product.Title,
+                CategoryName = product.ProductCategory.Title,
+                Alias = product.Alias,
+                Quantity = quantity,
+                ProductImg = productImage,
+                Price = product.PriceSale > 0 ? (decimal)product.PriceSale : product.Price,
+                TotalPrice = quantity * (product.PriceSale > 0 ? (decimal)product.PriceSale : product.Price)
+            };
+
+            cart.AddToCart(item, quantity);
+            Session["Cart"] = cart;
+
+            response = new { Success = true, msg = "Thêm sản phẩm vào giỏ hàng thành công!", code = 1, Count = cart.Items.Count };
+            return Json(response);
         }
+
 
 
         [AllowAnonymous]
         [HttpPost]
         public ActionResult Update(int id, int quantity)
         {
+            // Validate quantity input
             if (quantity < 1)
             {
                 return Json(new { Success = false, msg = "Số lượng sản phẩm phải lớn hơn 0" });
             }
 
-            ShoppingCart cart = (ShoppingCart)Session["Cart"];
-            if (cart != null)
+            // Retrieve the shopping cart from session
+            var cart = Session["Cart"] as ShoppingCart;
+            if (cart == null)
             {
-                cart.UpdateQuantity(id, quantity);
-                return Json(new { Success = true });
+                return Json(new { Success = false, msg = "Giỏ hàng của bạn hiện đang trống." });
             }
-            return Json(new { Success = false });
+
+            // Update quantity if item exists in cart
+            if (cart.UpdateQuantity(id, quantity))
+            {
+                return Json(new { Success = true, msg = "Cập nhật số lượng thành công." });
+            }
+
+            // Return failure if the item doesn't exist in the cart
+            return Json(new { Success = false, msg = "Cập nhật số lượng thất bại. Sản phẩm không tồn tại trong giỏ hàng." });
         }
+
 
 
         [AllowAnonymous]

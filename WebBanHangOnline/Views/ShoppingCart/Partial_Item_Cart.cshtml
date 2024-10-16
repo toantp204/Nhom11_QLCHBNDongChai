@@ -2,50 +2,54 @@
 @using WebBanHangOnline.Common
 
 <table class="table">
-    <tr class="text-center">
-        <th>STT</th>
-        <th>Ảnh sản phẩm</th>
-        <th>Tên sản phẩm</th>
-        <th>Danh mục</th>
-        <th>Giá</th>
-        <th style="width:100px;">Số lượng</th>
-        <th>Thành tiền</th>
-        <th style="width:200px;"></th>
-    </tr>
-    @if (Model != null && Model.Any())
-    {
-        var i = 0;
-        var tongtien = decimal.Zero;
-        foreach (var item in Model)
+    <thead>
+        <tr class="text-center">
+            <th>STT</th>
+            <th>Ảnh sản phẩm</th>
+            <th>Tên sản phẩm</th>
+            <th>Danh mục</th>
+            <th>Giá</th>
+            <th style="width:100px;">Số lượng</th>
+            <th>Thành tiền</th>
+            <th style="width:200px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
         {
-            tongtien += item.TotalPrice;
-            <tr class="text-center" id="trow_@item.ProductId">
-                <td>@(i + 1)</td>
-                <td><img src="@item.ProductImg" width="60" /></td>
-                <td><a href="/chi-tiet/@item.Alias-p@(item.ProductId)">@item.ProductName</a></td>
-                <td>@item.CategoryName</td>
-                <td>@Common.FormatNumber(item.Price, 0)</td>
-                <td><input type="number" class="form-control quantity-input" id="Quantity_@item.ProductId" value="@item.Quantity" min="1" /></td>
-                <td>@Common.FormatNumber(item.TotalPrice, 2)</td>
-                <td>
-                    <a href="#" data-id="@item.ProductId" class="btn btn-sm btn-danger btnDelete">Xóa</a>
-                    <a href="#" data-id="@item.ProductId" class="btn btn-sm btn-success btnUpdate">Cập nhật</a>
-                </td>
+            var i = 0;
+            var totalPrice = decimal.Zero;
+            foreach (var item in Model)
+            {
+                totalPrice += item.TotalPrice;
+                <tr class="text-center" id="trow_@item.ProductId">
+                    <td>@(i + 1)</td>
+                    <td><img src="@item.ProductImg" width="60" alt="@item.ProductName" /></td>
+                    <td><a href="/chi-tiet/@item.Alias-p@(item.ProductId)">@item.ProductName</a></td>
+                    <td>@item.CategoryName</td>
+                    <td>@Common.FormatNumber(item.Price, 0)</td>
+                    <td><input type="number" class="form-control quantity-input" id="Quantity_@item.ProductId" value="@item.Quantity" min="1" /></td>
+                    <td>@Common.FormatNumber(item.TotalPrice, 2)</td>
+                    <td>
+                        <button type="button" data-id="@item.ProductId" class="btn btn-sm btn-danger btnDelete">Xóa</button>
+                        <button type="button" data-id="@item.ProductId" class="btn btn-sm btn-success btnUpdate">Cập nhật</button>
+                    </td>
+                </tr>
+                i++;
+            }
+            <tr>
+                <th colspan="6" class="text-right">Tổng: </th>
+                <th class="text-center">@Common.FormatNumber(totalPrice, 0)</th>
+                <th></th>
             </tr>
-            i++;
         }
-        <tr>
-            <th colspan="6" class="text-right">Tổng: </th>
-            <th class="text-center">@Common.FormatNumber(tongtien, 0)</th>
-            <th></th>
-        </tr>
-    }
-    else
-    {
-        <tr>
-            <th colspan="8">Không có sản phẩm trong giỏ hàng!!</th>
-        </tr>
-    }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center">Không có sản phẩm trong giỏ hàng!!</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @section Scripts {
@@ -63,6 +67,7 @@
                         if (response.Success) {
                             $('#trow_' + id).remove();
                             // Update tổng tiền, số lượng sản phẩm...
+                            updateTotalPrice();
                         } else {
                             alert('Xóa sản phẩm thất bại!');
                         }
@@ -78,10 +83,9 @@
                 var id = $(this).data('id');
                 var quantity = $('#Quantity_' + id).val();
 
-                // Kiểm tra số lượng âm
                 if (quantity <= 0) {
                     alert('Số lượng phải lớn hơn 0.');
-                    $('#Quantity_' + id).val(1); // Đặt lại giá trị mặc định là 1
+                    $('#Quantity_' + id).val(1);
                     return;
                 }
 
@@ -91,7 +95,7 @@
                     data: { id: id, quantity: quantity },
                     success: function (response) {
                         if (response.Success) {
-                            // Update tổng tiền, số lượng sản phẩm...
+                            updateTotalPrice();
                         } else {
                             alert('Cập nhật số lượng thất bại!');
                         }
@@ -101,9 +105,18 @@
                     }
                 });
             });
+
+            function updateTotalPrice() {
+                $.ajax({
+                    url: '@Url.Action("GetCartTotal", "ShoppingCart")',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.Success) {
+                            $('th.text-center').text(response.TotalPrice);
+                        }
+                    }
+                });
+            }
         });
     </script>
 }
-
-
-
